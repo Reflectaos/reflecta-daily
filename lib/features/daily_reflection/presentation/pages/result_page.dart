@@ -207,18 +207,3 @@ class _SaveButton extends StatelessWidget {
   }
 }
 
-class _SaveButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: () {},
-      icon: const Icon(Icons.bookmark_border, size: 18, color: AppColors.gold),
-      label: const Text('Guardar reflexión', style: TextStyle(color: AppColors.gold)),
-      style: OutlinedButton.styleFrom(
-        minimumSize: const Size(double.infinity, 52),
-        side: const BorderSide(color: AppColors.gold),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      ),
-    );
-  }
-}
