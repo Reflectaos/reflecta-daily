@@ -3,16 +3,42 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../providers/reflection_provider.dart';
+import '../providers/firestore_provider.dart';
 
-class ResultPage extends ConsumerWidget {
+class ResultPage extends ConsumerStatefulWidget {
   final Map<String, dynamic> data;
   const ResultPage({super.key, required this.data});
+  @override
+  ConsumerState<ResultPage> createState() => _ResultPageState();
+}
+
+class _ResultPageState extends ConsumerState<ResultPage> {
+  bool _saved = false;
+
+  Future<void> _save(Map<String, dynamic> result) async {
+    await ref.read(reflectionRepositoryProvider).saveReflection({
+      'userInput':       widget.data['userInput'] ?? '',
+      'reflection':      result['reflection'] ?? '',
+      'verse':           result['verse'] ?? '',
+      'verseReference':  result['verseReference'] ?? '',
+      'spiritualInsight':result['spiritualInsight'] ?? '',
+      'actionPlan':      result['actionPlan'] ?? [],
+    });
+    setState(() => _saved = true);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('✅ Reflexión guardada'),
+          backgroundColor: AppColors.navyLight,
+        ),
+      );
+    }
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final state = ref.watch(reflectionProvider);
 
-    // Si aún está cargando mostramos loading
     if (state.status == ReflectionStatus.loading) {
       return Scaffold(
         backgroundColor: AppColors.navyBlue,
@@ -27,7 +53,6 @@ class ResultPage extends ConsumerWidget {
       );
     }
 
-    // Si hay error
     if (state.status == ReflectionStatus.error) {
       return Scaffold(
         backgroundColor: AppColors.navyBlue,
@@ -37,18 +62,23 @@ class ResultPage extends ConsumerWidget {
             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               const Icon(Icons.error_outline, color: AppColors.gold, size: 48),
               const SizedBox(height: 16),
-              Text('Algo salió mal', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.white)),
+              Text('Algo salió mal',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.white)),
               const SizedBox(height: 8),
-              Text(state.error ?? '', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey300), textAlign: TextAlign.center),
+              Text(state.error ?? '',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey300),
+                textAlign: TextAlign.center),
               const SizedBox(height: 24),
-              ElevatedButton(onPressed: () => context.pop(), child: const Text('Intentar de nuevo')),
+              ElevatedButton(
+                onPressed: () => context.pop(),
+                child: const Text('Intentar de nuevo')),
             ]),
           ),
         ),
       );
     }
 
-    final result = state.data ?? {};
+    final result  = state.data ?? {};
     final actions = (result['actionPlan'] as List<dynamic>?)?.cast<String>() ?? [];
 
     return Scaffold(
@@ -84,7 +114,33 @@ class ResultPage extends ConsumerWidget {
           const SizedBox(height: 12),
           _ActionPlanCard(actions: actions),
           const SizedBox(height: 24),
-          _SaveButton(),
+          _saved
+            ? Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.navyLight,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: AppColors.gold.withOpacity(0.4)),
+                ),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  const Icon(Icons.bookmark, color: AppColors.gold, size: 18),
+                  const SizedBox(width: 8),
+                  Text('Reflexión guardada',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.gold)),
+                ]),
+              )
+            : OutlinedButton.icon(
+                onPressed: () => _save(result),
+                icon: const Icon(Icons.bookmark_border, size: 18, color: AppColors.gold),
+                label: const Text('Guardar reflexión',
+                  style: TextStyle(color: AppColors.gold)),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 52),
+                  side: const BorderSide(color: AppColors.gold),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                ),
+              ),
         ]),
       ),
     );
@@ -113,7 +169,8 @@ class _ReflectionCard extends StatelessWidget {
         ]),
         const SizedBox(height: 8),
         Text(content,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.grey100, height: 1.6)),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: AppColors.grey100, height: 1.6)),
       ]),
     );
   }
@@ -190,20 +247,3 @@ class _ActionPlanCard extends StatelessWidget {
     );
   }
 }
-
-class _SaveButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: () {},
-      icon: const Icon(Icons.bookmark_border, size: 18, color: AppColors.gold),
-      label: const Text('Guardar reflexión', style: TextStyle(color: AppColors.gold)),
-      style: OutlinedButton.styleFrom(
-        minimumSize: const Size(double.infinity, 52),
-        side: const BorderSide(color: AppColors.gold),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      ),
-    );
-  }
-}
-
