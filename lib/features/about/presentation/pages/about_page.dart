@@ -19,13 +19,13 @@ class AboutPage extends StatelessWidget {
         child: Column(
           children: [
             _HeroCard(context),
-            const SizedBox(height: 16),
+            const SizedBox(height: 6),
             _QuoteCard(context),
-            const SizedBox(height: 16),
+            const SizedBox(height: 6),
             _InfoGrid(context),
-            const SizedBox(height: 16),
+            const SizedBox(height: 6),
             _BookCard(context),
-            const SizedBox(height: 16),
+            const SizedBox(height: 6),
             _AppCard(context),
             const SizedBox(height: 16),
             _FooterCard(context),
@@ -243,21 +243,6 @@ class AboutPage extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           const Divider(color: AppColors.navyBlue),
-          const SizedBox(height: 12),
-          GestureDetector(
-            onTap: () => launchUrl(Uri.parse('https://reflecta.zone')),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.language, color: AppColors.gold, size: 16),
-                const SizedBox(width: 6),
-                Text('reflecta.zone',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.gold, decoration: TextDecoration.underline,
-                    decorationColor: AppColors.gold)),
-              ],
-            ),
-          ),
           const SizedBox(height: 8),
           Text('Desarrollado con IA · © 2026 Carlos Sandoval',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
