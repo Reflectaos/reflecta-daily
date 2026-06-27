@@ -1,0 +1,15 @@
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+build/
+.firebase/
+firebase-debug.log
+.env
+lib/firebase_options.dart
+google-services.json
+GoogleService-Info.plist
+.idea/
+.DS_Store
+coverage/
