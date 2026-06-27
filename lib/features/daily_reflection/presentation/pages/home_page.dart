@@ -4,23 +4,19 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../profile/presentation/pages/profile_page.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(authStateProvider).valueOrNull;
-    final displayName = user?.displayName?.split(' ').first
-        ?? user?.email?.split('@').first
-        ?? 'amigo';
-
     return Scaffold(
       backgroundColor: AppColors.navyBlue,
       body: SafeArea(
         child: Column(
           children: [
-            _Header(name: displayName, ref: ref),
+            _Header(),
             const SizedBox(height: 20),
             _StreakCard(),
             const Spacer(),
@@ -35,31 +31,47 @@ class HomePage extends ConsumerWidget {
   }
 }
 
-class _Header extends StatelessWidget {
-  final String name;
-  final WidgetRef ref;
-  const _Header({required this.name, required this.ref});
-
+class _Header extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authStateProvider).valueOrNull;
+    final name = user?.displayName?.split(' ').first ?? 'Amigo';
+    final hour = DateTime.now().hour;
+    final greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('Buenos días',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.grey300)),
-            Text('$name ✨',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: AppColors.white, fontWeight: FontWeight.w800)),
-          ]),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(greeting,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.grey300)),
+              Text('$name ✨',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: AppColors.white, fontWeight: FontWeight.w800)),
+            ],
+          ),
           GestureDetector(
-            onTap: () => context.push(AppRoutes.about),
-            child: const CircleAvatar(
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ProfilePage())),
+            child: CircleAvatar(
               radius: 20,
-              backgroundColor: AppColors.navyLight,
-              child: Icon(Icons.person_outline, color: AppColors.grey300, size: 20),
+              backgroundColor: AppColors.gold,
+              backgroundImage: user?.photoURL != null
+                ? NetworkImage(user!.photoURL!) : null,
+              child: user?.photoURL == null
+                ? Text(
+                    (user?.displayName?.isNotEmpty == true)
+                      ? user!.displayName![0].toUpperCase()
+                      : 'U',
+                    style: const TextStyle(
+                      color: AppColors.navyBlue,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 14))
+                : null,
             ),
           ),
         ],
@@ -79,26 +91,39 @@ class _StreakCard extends StatelessWidget {
           color: AppColors.navyLight,
           borderRadius: BorderRadius.circular(16),
         ),
-        child: Row(children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text('7',
-              style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                color: AppColors.gold, fontWeight: FontWeight.w800, height: 1)),
-            Text('días seguidos',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey300)),
-          ]),
-          const Spacer(),
-          Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            Text('Racha activa',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey300)),
-            const SizedBox(height: 6),
-            Row(children: List.generate(7, (i) => Container(
-              width: 10, height: 10,
-              margin: const EdgeInsets.only(left: 3),
-              decoration: BoxDecoration(color: AppColors.gold, borderRadius: BorderRadius.circular(3)),
-            ))),
-          ]),
-        ]),
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('7',
+                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                    color: AppColors.gold, fontWeight: FontWeight.w800, height: 1)),
+                Text('días seguidos',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey300)),
+              ],
+            ),
+            const Spacer(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text('Racha activa',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey300)),
+                const SizedBox(height: 6),
+                Row(
+                  children: List.generate(7, (i) => Container(
+                    width: 10, height: 10,
+                    margin: const EdgeInsets.only(left: 3),
+                    decoration: BoxDecoration(
+                      color: AppColors.gold,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  )),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -109,14 +134,17 @@ class _GreetingSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('¿Cómo estuvo tu día?',
-          style: Theme.of(context).textTheme.displayMedium?.copyWith(
-            color: AppColors.white, fontWeight: FontWeight.w800)),
-        const SizedBox(height: 8),
-        Text('Cuéntame, y juntos lo reflexionamos.',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.grey300)),
-      ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('¿Cómo estuvo tu día?',
+            style: Theme.of(context).textTheme.displayMedium?.copyWith(
+              color: AppColors.white, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 8),
+          Text('Cuéntame, y juntos lo reflexionamos.',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.grey300)),
+        ],
+      ),
     );
   }
 }
@@ -141,14 +169,20 @@ class _BottomNav extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: AppColors.navyLight)),
+        border: Border(top: BorderSide(color: AppColors.navyLight))),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _NavItem(icon: Icons.home_outlined, active: true, onTap: () {}),
+          _NavItem(icon: Icons.menu_book_outlined, active: false, onTap: () {}),
+          _NavItem(
+            icon: Icons.person_outline,
+            active: false,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ProfilePage())),
+          ),
+        ],
       ),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-        _NavItem(icon: Icons.home_outlined,     active: true,  onTap: () {}),
-        _NavItem(icon: Icons.menu_book_outlined, active: false, onTap: () {}),
-        _NavItem(icon: Icons.person_outline,     active: false,
-          onTap: () => context.push(AppRoutes.about)),
-      ]),
     );
   }
 }
