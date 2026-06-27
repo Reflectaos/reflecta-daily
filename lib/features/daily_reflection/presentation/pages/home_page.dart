@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
-import '../../../profile/presentation/pages/profile_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -16,7 +15,7 @@ class HomePage extends ConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
-            _Header(),
+            _Header(ref: ref),
             const SizedBox(height: 20),
             _StreakCard(),
             const Spacer(),
@@ -31,14 +30,12 @@ class HomePage extends ConsumerWidget {
   }
 }
 
-class _Header extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(authStateProvider).valueOrNull;
-    final name = user?.displayName?.split(' ').first ?? 'Amigo';
-    final hour = DateTime.now().hour;
-    final greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
+class _Header extends StatelessWidget {
+  final WidgetRef ref;
+  const _Header({required this.ref});
 
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
       child: Row(
@@ -47,33 +44,24 @@ class _Header extends ConsumerWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(greeting,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.grey300)),
-              Text('$name ✨',
+              Text('Buenos días',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.grey300)),
+              Text('Bienvenido ✨',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: AppColors.white, fontWeight: FontWeight.w800)),
             ],
           ),
-          GestureDetector(
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const ProfilePage())),
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: AppColors.gold,
-              backgroundImage: user?.photoURL != null
-                ? NetworkImage(user!.photoURL!) : null,
-              child: user?.photoURL == null
-                ? Text(
-                    (user?.displayName?.isNotEmpty == true)
-                      ? user!.displayName![0].toUpperCase()
-                      : 'U',
-                    style: const TextStyle(
-                      color: AppColors.navyBlue,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 14))
-                : null,
+          Row(children: [
+            IconButton(
+              icon: const Icon(Icons.info_outline, color: AppColors.grey300),
+              onPressed: () => context.push(AppRoutes.about),
             ),
-          ),
+            IconButton(
+              icon: const Icon(Icons.logout_outlined, color: AppColors.grey300),
+              onPressed: () => ref.read(authNotifierProvider.notifier).signOut(),
+            ),
+          ]),
         ],
       ),
     );
@@ -100,7 +88,8 @@ class _StreakCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.displayMedium?.copyWith(
                     color: AppColors.gold, fontWeight: FontWeight.w800, height: 1)),
                 Text('días seguidos',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey300)),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.grey300)),
               ],
             ),
             const Spacer(),
@@ -108,7 +97,8 @@ class _StreakCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text('Racha activa',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey300)),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.grey300)),
                 const SizedBox(height: 6),
                 Row(
                   children: List.generate(7, (i) => Container(
@@ -142,7 +132,8 @@ class _GreetingSection extends StatelessWidget {
               color: AppColors.white, fontWeight: FontWeight.w800)),
           const SizedBox(height: 8),
           Text('Cuéntame, y juntos lo reflexionamos.',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.grey300)),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: AppColors.grey300)),
         ],
       ),
     );
@@ -169,17 +160,17 @@ class _BottomNav extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: AppColors.navyLight))),
+        border: Border(top: BorderSide(color: AppColors.navyLight)),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _NavItem(icon: Icons.home_outlined, active: true, onTap: () {}),
           _NavItem(icon: Icons.menu_book_outlined, active: false, onTap: () {}),
           _NavItem(
-            icon: Icons.person_outline,
+            icon: Icons.info_outline,
             active: false,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const ProfilePage())),
+            onTap: () => context.push(AppRoutes.about),
           ),
         ],
       ),
@@ -197,15 +188,19 @@ class _NavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Icon(icon, color: active ? AppColors.gold : AppColors.grey600, size: 24),
-        if (active)
-          Container(
-            margin: const EdgeInsets.only(top: 4),
-            width: 4, height: 4,
-            decoration: const BoxDecoration(color: AppColors.gold, shape: BoxShape.circle),
-          ),
-      ]),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: active ? AppColors.gold : AppColors.grey600, size: 24),
+          if (active)
+            Container(
+              margin: const EdgeInsets.only(top: 4),
+              width: 4, height: 4,
+              decoration: const BoxDecoration(
+                color: AppColors.gold, shape: BoxShape.circle),
+            ),
+        ],
+      ),
     );
   }
 }

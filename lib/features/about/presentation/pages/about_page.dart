@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class AboutPage extends StatelessWidget {
@@ -15,130 +15,67 @@ class AboutPage extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.white)),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(24, 8, 24, 40),
+        padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _AppBrandCard(context),
-            const SizedBox(height: 16),
-            _CreatorCard(context),
+            _HeroCard(context),
             const SizedBox(height: 16),
             _QuoteCard(context),
             const SizedBox(height: 16),
+            _InfoGrid(context),
+            const SizedBox(height: 16),
             _BookCard(context),
             const SizedBox(height: 16),
-            _InfoCard(context),
-            const SizedBox(height: 24),
-            _AIDisclaimer(context),
+            _AppCard(context),
+            const SizedBox(height: 16),
+            _FooterCard(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _AppBrandCard(BuildContext context) {
+  Widget _HeroCard(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: AppColors.navyLight,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.gold.withOpacity(0.3)),
       ),
       child: Column(
         children: [
           Container(
-            width: 72, height: 72,
-            decoration: BoxDecoration(
+            width: 80, height: 80,
+            decoration: const BoxDecoration(
               color: AppColors.gold,
-              borderRadius: BorderRadius.circular(20),
+              shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.auto_awesome, color: AppColors.navyBlue, size: 36),
+            child: Center(
+              child: Text('CS',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: AppColors.navyBlue, fontWeight: FontWeight.w800)),
+            ),
           ),
-          const SizedBox(height: 12),
-          Text('Reflecta Daily',
+          const SizedBox(height: 16),
+          Text('Carlos Sandoval',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               color: AppColors.white, fontWeight: FontWeight.w800)),
           const SizedBox(height: 4),
-          Text('Tu espejo espiritual diario',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.grey300)),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(
-              color: AppColors.gold.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.gold.withOpacity(0.4)),
-            ),
-            child: Text('MVP v1.0 · 2026',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppColors.gold, fontWeight: FontWeight.w600)),
+          Text('Escritor · Creador de contenido · Fundador de Reflecta AI',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: AppColors.grey300),
+            textAlign: TextAlign.center),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 8, runSpacing: 8,
+            alignment: WrapAlignment.center,
+            children: [
+              _Badge('Reflecta Daily'),
+              _Badge('Autor publicado'),
+              _Badge('Desarrollado con IA'),
+            ],
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _CreatorCard(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.navyLight,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(children: [
-            const Icon(Icons.person_outline, color: AppColors.gold, size: 16),
-            const SizedBox(width: 6),
-            Text('CREADOR Y DISEÑADOR',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppColors.gold, letterSpacing: 0.8, fontWeight: FontWeight.w700)),
-          ]),
-          const SizedBox(height: 16),
-          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Container(
-              width: 56, height: 56,
-              decoration: BoxDecoration(
-                color: AppColors.gold,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text('CS',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppColors.navyBlue, fontWeight: FontWeight.w800)),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Carlos Sandoval',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: AppColors.white, fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 4),
-                  Text('Escritor · Creador de contenido',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.grey300)),
-                  const SizedBox(height: 8),
-                  Wrap(spacing: 6, runSpacing: 6, children: [
-                    _Chip('Autor publicado'),
-                    _Chip('Reflecta AI'),
-                    _Chip('Fe & propósito'),
-                  ]),
-                ],
-              ),
-            ),
-          ]),
-          const SizedBox(height: 16),
-          Text(
-            'Escritor y creador de contenido, pero sobre todo un mensajero con propósito. '
-            'Cree profundamente en el poder transformador de las palabras para sanar heridas, '
-            'despertar conciencias y guiar vidas hacia una mejor versión.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppColors.grey100, height: 1.6)),
         ],
       ),
     );
@@ -146,90 +83,121 @@ class AboutPage extends StatelessWidget {
 
   Widget _QuoteCard(BuildContext context) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.navyLight,
         borderRadius: BorderRadius.circular(16),
-        border: Border(left: BorderSide(color: AppColors.gold, width: 3)),
+        border: const Border(left: BorderSide(color: AppColors.gold, width: 3)),
       ),
       child: Text(
-        '"Si con una sola frase puedo tocar un corazón y acercarlo más a Dios, '
-        'entonces estoy cumpliendo mi llamado."',
-        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-          color: AppColors.white, fontStyle: FontStyle.italic, height: 1.6)),
+        '"Si con una sola frase puedo tocar un corazón y acercarlo más a Dios, entonces estoy cumpliendo mi llamado."',
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: AppColors.grey100, fontStyle: FontStyle.italic, height: 1.7),
+      ),
+    );
+  }
+
+  Widget _InfoGrid(BuildContext context) {
+    final items = [
+      (Icons.favorite_outline, 'Misión',
+        'Mensajero con propósito. Conectar de corazón a corazón y dejar una huella que trascienda el tiempo.'),
+      (Icons.auto_awesome_outlined, 'Visión',
+        'Herramientas de IA que combinan tecnología avanzada con valores bíblicos para guiar a jóvenes.'),
+      (Icons.menu_book_outlined, 'Inspiración',
+        'Inspirado en la Palabra de Dios. Escribe con honestidad desde las trincheras de la vida real.'),
+      (Icons.track_changes_outlined, 'Enfoque',
+        'Crecimiento personal, fe real, finanzas sanas y propósito claro conectado con Dios.'),
+    ];
+
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      childAspectRatio: 1.1,
+      children: items.map((item) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.navyLight,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(item.$1, color: AppColors.gold, size: 20),
+            const SizedBox(height: 8),
+            Text(item.$2,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: AppColors.gold, letterSpacing: 0.8, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 4),
+            Expanded(
+              child: Text(item.$3,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppColors.grey300, height: 1.5),
+                overflow: TextOverflow.fade),
+            ),
+          ],
+        ),
+      )).toList(),
     );
   }
 
   Widget _BookCard(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.navyLight,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(children: [
-            const Icon(Icons.menu_book_outlined, color: AppColors.gold, size: 16),
-            const SizedBox(width: 6),
-            Text('LIBRO PUBLICADO',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppColors.gold, letterSpacing: 0.8, fontWeight: FontWeight.w700)),
-          ]),
-          const SizedBox(height: 12),
-          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Container(
-              width: 44, height: 60,
-              decoration: BoxDecoration(
-                color: AppColors.navyBlue,
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: AppColors.gold.withOpacity(0.4)),
-              ),
-              child: const Icon(Icons.book, color: AppColors.gold, size: 22),
+          Container(
+            width: 52, height: 68,
+            decoration: BoxDecoration(
+              color: AppColors.navyBlue,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.gold.withOpacity(0.3)),
             ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Volver a Empezar',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: AppColors.white, fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 4),
-                  Text('Cómo salir de las deudas, recuperar tu propósito y convertirte en la persona que tu familia necesita.',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.grey300, height: 1.5)),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: AppColors.gold.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColors.gold.withOpacity(0.3)),
-                    ),
-                    child: Text('PDF Digital',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppColors.gold)),
+            child: const Icon(Icons.menu_book, color: AppColors.gold, size: 26),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Volver a Empezar',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: AppColors.white, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 4),
+                Text('Cómo salir de las deudas, recuperar tu propósito y convertirte en la persona que tu familia necesita.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.grey300, height: 1.5)),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.gold.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: AppColors.gold.withOpacity(0.4)),
                   ),
-                ],
-              ),
+                  child: Text('Libro publicado · PDF digital',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColors.gold, fontSize: 11)),
+                ),
+              ],
             ),
-          ]),
+          ),
         ],
       ),
     );
   }
 
-  Widget _InfoCard(BuildContext context) {
-    final items = [
-      ['Proyecto', 'Reflecta AI — Reflecta Daily'],
-      ['Versión', 'MVP v1.0'],
-      ['Año', '2026'],
-      ['Plataforma', 'Web · Mobile (Flutter)'],
-      ['IA', 'Groq — llama-3.3-70b'],
-    ];
+  Widget _AppCard(BuildContext context) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.navyLight,
@@ -241,53 +209,88 @@ class AboutPage extends StatelessWidget {
           Row(children: [
             const Icon(Icons.info_outline, color: AppColors.gold, size: 16),
             const SizedBox(width: 6),
-            Text('INFO DEL PROYECTO',
+            Text('SOBRE REFLECTA DAILY',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: AppColors.gold, letterSpacing: 0.8, fontWeight: FontWeight.w700)),
           ]),
           const SizedBox(height: 12),
-          ...items.map((item) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(item[0],
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey300)),
-                Text(item[1],
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.white, fontWeight: FontWeight.w600)),
-              ],
-            ),
-          )),
+          Text(
+            'Reflecta Daily es la primera herramienta de Reflecta AI — una plataforma diseñada para jóvenes cristianos que buscan crecer en disciplina, conocimiento y propósito.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppColors.grey100, height: 1.6)),
         ],
       ),
     );
   }
 
-  Widget _AIDisclaimer(BuildContext context) {
-    return Center(
-      child: Column(children: [
-        const Icon(Icons.auto_awesome, color: AppColors.gold, size: 16),
-        const SizedBox(height: 6),
-        Text('Desarrollado con IA · Diseñado con propósito',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey600)),
-        const SizedBox(height: 4),
-        Text('© 2026 Carlos Sandoval · Reflecta AI',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey600)),
-      ]),
+  Widget _FooterCard(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.navyLight,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _FooterItem(context, 'Proyecto', 'Reflecta AI'),
+              _FooterItem(context, 'Versión', 'MVP v1.0'),
+              _FooterItem(context, 'Año', '2026'),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Divider(color: AppColors.navyBlue),
+          const SizedBox(height: 12),
+          GestureDetector(
+            onTap: () => launchUrl(Uri.parse('https://reflecta.zone')),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.language, color: AppColors.gold, size: 16),
+                const SizedBox(width: 6),
+                Text('reflecta.zone',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.gold, decoration: TextDecoration.underline,
+                    decorationColor: AppColors.gold)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text('Desarrollado con IA · © 2026 Carlos Sandoval',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: AppColors.grey600),
+            textAlign: TextAlign.center),
+        ],
+      ),
     );
   }
 
-  Widget _Chip(String label) {
+  Widget _FooterItem(BuildContext context, String label, String value) {
+    return Column(
+      children: [
+        Text(label,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey600)),
+        const SizedBox(height: 2),
+        Text(value,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: AppColors.white, fontWeight: FontWeight.w700)),
+      ],
+    );
+  }
+
+  Widget _Badge(String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
         color: AppColors.gold.withOpacity(0.12),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.gold.withOpacity(0.35)),
       ),
-      child: Text(label,
-        style: const TextStyle(color: AppColors.gold, fontSize: 11, fontWeight: FontWeight.w600)),
+      child: Text(text,
+        style: const TextStyle(color: AppColors.gold, fontSize: 12)),
     );
   }
 }
