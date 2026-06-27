@@ -231,8 +231,6 @@ class _AboutCard extends StatelessWidget {
           _AboutRow(icon: Icons.auto_awesome, label: 'App', value: 'Reflecta Daily'),
           _AboutRow(icon: Icons.tag, label: 'Versión', value: 'MVP v1.0 · 2026'),
           _AboutRow(icon: Icons.language, label: 'Web', value: 'reflecta.study'),
-          _AboutRow(icon: Icons.psychology_outlined, label: 'IA', value: 'Groq · llama-3.3-70b'),
-          _AboutRow(icon: Icons.code, label: 'Stack', value: 'Flutter + Firebase', last: true),
         ],
       ),
     );
