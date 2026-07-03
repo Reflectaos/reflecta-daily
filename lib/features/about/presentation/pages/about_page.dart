@@ -159,7 +159,7 @@ class AboutPage extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.navyBlue,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppColors.gold.withOpacity(0.3)),
+              border: Border.all(color: AppColors.gold.withValues(alpha: 0.3)),
             ),
             child: const Icon(Icons.menu_book, color: AppColors.gold, size: 26),
           ),
@@ -179,9 +179,9 @@ class AboutPage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: AppColors.gold.withOpacity(0.15),
+                    color: AppColors.gold.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: AppColors.gold.withOpacity(0.4)),
+                    border: Border.all(color: AppColors.gold.withValues(alpha: 0.4)),
                   ),
                   child: Text('Libro publicado · PDF digital',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -270,9 +270,9 @@ class AboutPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
-        color: AppColors.gold.withOpacity(0.12),
+        color: AppColors.gold.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.gold.withOpacity(0.35)),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.35)),
       ),
       child: Text(text,
         style: const TextStyle(color: AppColors.gold, fontSize: 12)),

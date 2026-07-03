@@ -164,9 +164,9 @@ class _ReflectionCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
-                color: AppColors.gold.withOpacity(0.12),
+                color: AppColors.gold.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.gold.withOpacity(0.3)),
+                border: Border.all(color: AppColors.gold.withValues(alpha: 0.3)),
               ),
               child: Text(data['verseReference'] ?? '',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.gold, fontSize: 11)),
@@ -245,7 +245,7 @@ class _VerseSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.navyBlue,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.gold.withOpacity(0.3))),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.3))),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Row(children: [
           Icon(Icons.menu_book_outlined, color: AppColors.gold, size: 14),

@@ -89,13 +89,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
 
               const SizedBox(height: 20),
-              Row(children: [
-                const Expanded(child: Divider(color: AppColors.navyLight, thickness: 1)),
+              const Row(children: [
+                Expanded(child: Divider(color: AppColors.navyLight, thickness: 1)),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: EdgeInsets.symmetric(horizontal: 12),
                   child: Text('o', style: TextStyle(color: AppColors.grey600)),
                 ),
-                const Expanded(child: Divider(color: AppColors.navyLight, thickness: 1)),
+                Expanded(child: Divider(color: AppColors.navyLight, thickness: 1)),
               ]),
               const SizedBox(height: 20),
 
@@ -205,11 +205,11 @@ class _GoogleButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         backgroundColor: AppColors.navyLight,
       ),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        const Text('G', style: TextStyle(
+      child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text('G', style: TextStyle(
           color: AppColors.white, fontSize: 18, fontWeight: FontWeight.w700)),
-        const SizedBox(width: 10),
-        const Text('Continuar con Google',
+        SizedBox(width: 10),
+        Text('Continuar con Google',
           style: TextStyle(color: AppColors.white, fontWeight: FontWeight.w600)),
       ]),
     );

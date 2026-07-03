@@ -125,7 +125,7 @@ class _ResultPageState extends ConsumerState<ResultPage> {
                 decoration: BoxDecoration(
                   color: AppColors.navyLight,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppColors.gold.withOpacity(0.4)),
+                  border: Border.all(color: AppColors.gold.withValues(alpha: 0.4)),
                 ),
                 child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   const Icon(Icons.bookmark, color: AppColors.gold, size: 18),
@@ -193,7 +193,7 @@ class _VerseCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.navyLight,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.gold.withOpacity(0.3)),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.3)),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [

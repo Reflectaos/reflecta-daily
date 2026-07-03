@@ -1,23 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../profile/presentation/providers/profile_provider.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user    = ref.watch(authServiceProvider).currentUser;
+    final profile = ref.watch(profileProvider);
+    final streak  = ref.watch(streakProvider);
+
+    final name = profile.valueOrNull?['name']
+      ?? user?.displayName
+      ?? 'amigo';
+
+    final streakDays = streak.valueOrNull ?? 0;
+
     return Scaffold(
       backgroundColor: AppColors.navyBlue,
       body: SafeArea(
         child: Column(
           children: [
-            _Header(ref: ref),
+            _Header(name: name, ref: ref),
             const SizedBox(height: 20),
-            _StreakCard(),
+            _StreakCard(days: streakDays),
             const Spacer(),
             _GreetingSection(),
             const Spacer(),
@@ -31,8 +42,16 @@ class HomePage extends ConsumerWidget {
 }
 
 class _Header extends StatelessWidget {
+  final String name;
   final WidgetRef ref;
-  const _Header({required this.ref});
+  const _Header({required this.name, required this.ref});
+
+  String _greeting() {
+    final h = DateTime.now().hour;
+    if (h < 12) return 'Buenos dias';
+    if (h < 18) return 'Buenas tardes';
+    return 'Buenas noches';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +63,9 @@ class _Header extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Buenos días',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.grey300)),
-              Text('Bienvenido ✨',
+              Text(_greeting(),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.grey300)),
+              Text('$name ✨',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: AppColors.white, fontWeight: FontWeight.w800)),
             ],
@@ -57,9 +75,13 @@ class _Header extends StatelessWidget {
               icon: const Icon(Icons.info_outline, color: AppColors.grey300),
               onPressed: () => context.push(AppRoutes.about),
             ),
-            IconButton(
-              icon: const Icon(Icons.logout_outlined, color: AppColors.grey300),
-              onPressed: () => ref.read(authNotifierProvider.notifier).signOut(),
+            GestureDetector(
+              onTap: () => context.push(AppRoutes.profile),
+              child: const CircleAvatar(
+                radius: 18,
+                backgroundColor: AppColors.navyLight,
+                child: Icon(Icons.person_outline, color: AppColors.grey300, size: 18),
+              ),
             ),
           ]),
         ],
@@ -69,6 +91,9 @@ class _Header extends StatelessWidget {
 }
 
 class _StreakCard extends StatelessWidget {
+  final int days;
+  const _StreakCard({required this.days});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -84,12 +109,11 @@ class _StreakCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('7',
+                Text('$days',
                   style: Theme.of(context).textTheme.displayMedium?.copyWith(
                     color: AppColors.gold, fontWeight: FontWeight.w800, height: 1)),
-                Text('días seguidos',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.grey300)),
+                Text('dias seguidos',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey300)),
               ],
             ),
             const Spacer(),
@@ -97,11 +121,10 @@ class _StreakCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text('Racha activa',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.grey300)),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.grey300)),
                 const SizedBox(height: 6),
                 Row(
-                  children: List.generate(7, (i) => Container(
+                  children: List.generate(days.clamp(0, 7), (i) => Container(
                     width: 10, height: 10,
                     margin: const EdgeInsets.only(left: 3),
                     decoration: BoxDecoration(
@@ -127,13 +150,12 @@ class _GreetingSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('¿Cómo estuvo tu día?',
+          Text('Como estuvo tu dia?',
             style: Theme.of(context).textTheme.displayMedium?.copyWith(
               color: AppColors.white, fontWeight: FontWeight.w800)),
           const SizedBox(height: 8),
-          Text('Cuéntame, y juntos lo reflexionamos.',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: AppColors.grey300)),
+          Text('Cuentame, y juntos lo reflexionamos.',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.grey300)),
         ],
       ),
     );
@@ -148,7 +170,7 @@ class _StartButton extends StatelessWidget {
       child: ElevatedButton.icon(
         onPressed: () => context.push(AppRoutes.reflection),
         icon: const Icon(Icons.edit_outlined, size: 18),
-        label: const Text('Comenzar mi reflexión'),
+        label: const Text('Comenzar mi reflexion'),
       ),
     );
   }
@@ -165,13 +187,9 @@ class _BottomNav extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _NavItem(icon: Icons.home_outlined, active: true, onTap: () {}),
+          _NavItem(icon: Icons.home_outlined,      active: true,  onTap: () {}),
           _NavItem(icon: Icons.menu_book_outlined, active: false, onTap: () => context.push(AppRoutes.history)),
-          _NavItem(
-            icon: Icons.info_outline,
-            active: false,
-            onTap: () => context.push(AppRoutes.about),
-          ),
+          _NavItem(icon: Icons.person_outline,     active: false, onTap: () => context.push(AppRoutes.profile)),
         ],
       ),
     );

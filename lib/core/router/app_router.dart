@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -10,6 +8,7 @@ import '../../features/daily_reflection/presentation/pages/result_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/about/presentation/pages/about_page.dart';
 import '../../features/history/presentation/pages/history_page.dart';
+import '../../features/profile/presentation/pages/profile_page.dart';
 
 abstract class AppRoutes {
   static const login      = '/login';
@@ -19,6 +18,7 @@ abstract class AppRoutes {
   static const result     = '/result';
   static const about      = '/about';
   static const history    = '/history';
+  static const profile    = '/profile';
 }
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -41,6 +41,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ResultPage(data: s.extra as Map<String, dynamic>? ?? {})),
       GoRoute(path: AppRoutes.about,      builder: (c, s) => const AboutPage()),
       GoRoute(path: AppRoutes.history,    builder: (c, s) => const HistoryPage()),
+      GoRoute(path: AppRoutes.profile,    builder: (c, s) => const ProfilePage()),
     ],
   );
 });

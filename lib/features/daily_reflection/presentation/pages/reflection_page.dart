@@ -142,7 +142,7 @@ class _ReflectionPageState extends ConsumerState<ReflectionPage> {
                             ? 'Escuchando... habla ahora'
                             : 'Hoy tuve una conversación difícil...',
                           hintStyle: TextStyle(
-                            color: _isListening ? AppColors.gold.withOpacity(0.6) : AppColors.grey600),
+                            color: _isListening ? AppColors.gold.withValues(alpha: 0.6) : AppColors.grey600),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.all(16),
                           counterText: '',
