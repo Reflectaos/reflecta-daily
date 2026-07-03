@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -25,11 +26,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
   return GoRouter(
     initialLocation: AppRoutes.home,
-    redirect: (context, state) {
+    redirect: (context, state) async {
       final isLoggedIn = authState.valueOrNull != null;
       final isAuthRoute = state.matchedLocation == AppRoutes.login;
+      final isOnboarding = state.matchedLocation == AppRoutes.onboarding;
       if (!isLoggedIn && !isAuthRoute) return AppRoutes.login;
-      if (isLoggedIn && isAuthRoute)  return AppRoutes.home;
+      if (isLoggedIn && isAuthRoute) {
+        final prefs = await SharedPreferences.getInstance();
+        final done = prefs.getBool('onboarding_done') ?? false;
+        return done ? AppRoutes.home : AppRoutes.onboarding;
+      }
       return null;
     },
     routes: [
