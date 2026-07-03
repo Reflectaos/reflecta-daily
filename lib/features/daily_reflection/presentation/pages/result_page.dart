@@ -30,8 +30,11 @@ class _ResultPageState extends ConsumerState<ResultPage> {
         const SnackBar(
           content: Text('✅ Reflexión guardada'),
           backgroundColor: AppColors.navyLight,
+          duration: Duration(seconds: 2),
         ),
       );
+      await Future.delayed(const Duration(seconds: 2));
+      if (mounted) context.go(AppRoutes.home);
     }
   }
 
