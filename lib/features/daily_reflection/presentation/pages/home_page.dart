@@ -166,7 +166,7 @@ class _BottomNav extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _NavItem(icon: Icons.home_outlined, active: true, onTap: () {}),
-          _NavItem(icon: Icons.menu_book_outlined, active: false, onTap: () {}),
+          _NavItem(icon: Icons.menu_book_outlined, active: false, onTap: () => context.push(AppRoutes.history)),
           _NavItem(
             icon: Icons.info_outline,
             active: false,

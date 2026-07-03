@@ -9,6 +9,7 @@ import '../../features/daily_reflection/presentation/pages/reflection_page.dart'
 import '../../features/daily_reflection/presentation/pages/result_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/about/presentation/pages/about_page.dart';
+import '../../features/history/presentation/pages/history_page.dart';
 
 abstract class AppRoutes {
   static const login      = '/login';
@@ -17,6 +18,7 @@ abstract class AppRoutes {
   static const reflection = '/reflection';
   static const result     = '/result';
   static const about      = '/about';
+  static const history    = '/history';
 }
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -38,6 +40,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: AppRoutes.result,     builder: (c, s) =>
         ResultPage(data: s.extra as Map<String, dynamic>? ?? {})),
       GoRoute(path: AppRoutes.about,      builder: (c, s) => const AboutPage()),
+      GoRoute(path: AppRoutes.history,    builder: (c, s) => const HistoryPage()),
     ],
   );
 });
