@@ -13,3 +13,5 @@ GoogleService-Info.plist
 .idea/
 .DS_Store
 coverage/
+*.apk
+*.aab
