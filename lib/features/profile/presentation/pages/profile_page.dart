@@ -78,9 +78,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     const SnackBar(
                       content: Text('Perfil guardado'),
                       backgroundColor: AppColors.navyLight,
+                      duration: Duration(seconds: 2),
                     ),
                   );
                   ref.invalidate(profileProvider);
+                  await Future.delayed(const Duration(seconds: 2));
+                  if (mounted) context.go(AppRoutes.home);
                 }
               },
               child: notifier.loading
