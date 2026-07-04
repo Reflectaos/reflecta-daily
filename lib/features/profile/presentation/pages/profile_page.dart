@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/profile_provider.dart';
@@ -57,6 +59,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             const SizedBox(height: 16),
             _NameField(controller: _nameCtrl),
             const SizedBox(height: 16),
+            OutlinedButton.icon(
+              onPressed: () => context.push(AppRoutes.notifications),
+              icon: const Icon(Icons.notifications_outlined, size: 18, color: AppColors.gold),
+              label: const Text('Recordatorio diario', style: TextStyle(color: AppColors.gold)),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 52),
+                side: const BorderSide(color: AppColors.gold),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              ),
+            ),
+            const SizedBox(height: 12),
             ElevatedButton(
               onPressed: notifier.loading ? null : () async {
                 await ref.read(profileNotifierProvider.notifier).save(_nameCtrl.text.trim());
