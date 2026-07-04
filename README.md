@@ -30,7 +30,7 @@ Autor de **Volver a Empezar** y mensajero con propósito. Inspirado en la Palabr
 ---
 
 ## Stack Técnico
-
+Y
 | Capa | Tecnología |
 |---|---|
 | Frontend | Flutter (Web + Mobile) |
