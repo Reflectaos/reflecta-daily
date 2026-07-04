@@ -1,12 +1,12 @@
 import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import '../../../../core/constants/env.dart';
 
 class GroqService {
   static const _baseUrl = 'https://api.groq.com/openai/v1/chat/completions';
   static const _model   = 'llama-3.3-70b-versatile';
 
-  String get _apiKey => dotenv.env['GROQ_API_KEY'] ?? '';
+  String get _apiKey => Env.groqApiKey;
 
   Future<Map<String, dynamic>> generateReflection(String userInput) async {
     final prompt = '''
