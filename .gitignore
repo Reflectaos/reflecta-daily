@@ -15,3 +15,4 @@ GoogleService-Info.plist
 coverage/
 *.apk
 *.aab
+!reflecta-daily-v1.6.apk
