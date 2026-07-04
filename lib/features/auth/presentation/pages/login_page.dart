@@ -182,6 +182,27 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () => context.push(AppRoutes.privacy),
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: const TextSpan(
+                    text: 'Al continuar aceptas nuestra ',
+                    style: TextStyle(color: AppColors.grey600, fontSize: 12),
+                    children: [
+                      TextSpan(
+                        text: 'Politica de Privacidad',
+                        style: TextStyle(
+                          color: AppColors.gold,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.gold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),

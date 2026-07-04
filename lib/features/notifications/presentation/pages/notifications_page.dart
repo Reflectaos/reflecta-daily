@@ -46,7 +46,7 @@ class NotificationsPage extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppColors.navyLight,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.gold.withOpacity(0.3)),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.3)),
       ),
       child: Column(children: [
         const Text('🔔', style: TextStyle(fontSize: 36)),
@@ -86,8 +86,8 @@ class NotificationsPage extends ConsumerWidget {
         Switch(
           value: state.enabled,
           onChanged: (val) => ref.read(notifProvider.notifier).toggle(val),
-          activeColor: AppColors.gold,
-          activeTrackColor: AppColors.gold.withOpacity(0.3),
+          activeThumbColor: AppColors.gold,
+          activeTrackColor: AppColors.gold.withValues(alpha: 0.3),
           inactiveThumbColor: AppColors.grey600,
           inactiveTrackColor: AppColors.navyBlue,
         ),
@@ -103,7 +103,7 @@ class NotificationsPage extends ConsumerWidget {
           initialTime: state.time,
           builder: (context, child) => Theme(
             data: Theme.of(context).copyWith(
-              timePickerTheme: TimePickerThemeData(
+              timePickerTheme: const TimePickerThemeData(
                 backgroundColor: AppColors.navyLight,
                 hourMinuteColor: AppColors.navyBlue,
                 hourMinuteTextColor: AppColors.white,
@@ -148,9 +148,9 @@ class NotificationsPage extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
-              color: AppColors.gold.withOpacity(0.15),
+              color: AppColors.gold.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppColors.gold.withOpacity(0.4)),
+              border: Border.all(color: AppColors.gold.withValues(alpha: 0.4)),
             ),
             child: Text(
               _formatTime(state.time),
@@ -167,7 +167,7 @@ class NotificationsPage extends ConsumerWidget {
     return ElevatedButton.icon(
       onPressed: () {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text(
               'Recordatorio guardado para las \${_formatTime(state.time)}',
             ),

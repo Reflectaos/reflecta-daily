@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../profile/data/services/profile_service.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 
 class OnboardingPage extends ConsumerStatefulWidget {

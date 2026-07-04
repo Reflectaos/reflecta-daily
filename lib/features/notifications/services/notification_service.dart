@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../core/theme/app_theme.dart';
 
 class NotificationService {
   static const _keyEnabled = 'notif_enabled';

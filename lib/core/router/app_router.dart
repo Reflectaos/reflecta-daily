@@ -11,6 +11,7 @@ import '../../features/about/presentation/pages/about_page.dart';
 import '../../features/history/presentation/pages/history_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/notifications/presentation/pages/notifications_page.dart';
+import '../../features/privacy/presentation/pages/privacy_page.dart';
 
 abstract class AppRoutes {
   static const login      = '/login';
@@ -22,6 +23,7 @@ abstract class AppRoutes {
   static const history    = '/history';
   static const profile       = '/profile';
   static const notifications = '/notifications';
+  static const privacy    = '/privacy';
 }
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -51,6 +53,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: AppRoutes.history,    builder: (c, s) => const HistoryPage()),
       GoRoute(path: AppRoutes.profile,       builder: (c, s) => const ProfilePage()),
       GoRoute(path: AppRoutes.notifications, builder: (c, s) => const NotificationsPage()),
+      GoRoute(path: AppRoutes.privacy,       builder: (c, s) => const PrivacyPage()),
     ],
   );
 });

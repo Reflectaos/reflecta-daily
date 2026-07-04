@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class AboutPage extends StatelessWidget {
@@ -28,7 +29,9 @@ class AboutPage extends StatelessWidget {
             const SizedBox(height: 6),
             _AppCard(context),
             const SizedBox(height: 16),
-            _FooterCard(context),
+            _PrivacyButton(context),
+          const SizedBox(height: 12),
+          _FooterCard(context),
           ],
         ),
       ),
@@ -219,6 +222,36 @@ class AboutPage extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: AppColors.grey100, height: 1.6)),
         ],
+      ),
+    );
+  }
+
+  Widget _PrivacyButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.push(AppRoutes.privacy),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.navyLight,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.gold.withOpacity(0.2)),
+        ),
+        child: Row(children: [
+          const Icon(Icons.shield_outlined, color: AppColors.gold, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('Privacidad y confidencialidad',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: AppColors.white, fontWeight: FontWeight.w600)),
+              Text('Tus datos son privados y solo tuyos',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppColors.grey300)),
+            ]),
+          ),
+          const Icon(Icons.chevron_right, color: AppColors.grey600, size: 18),
+        ]),
       ),
     );
   }
