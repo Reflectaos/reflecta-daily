@@ -35,11 +35,24 @@ Lo que el usuario compartió:
       body: jsonEncode({
         'model': _model,
         'messages': [
-          {'role': 'system', 'content': 'Eres Reflecta, un guía espiritual cristiano. Responde ÚNICAMENTE con JSON válido, sin texto adicional.'},
-          {'role': 'user', 'content': prompt},
+          {
+            'role': 'system',
+            'content':
+                'Eres Reflecta, un guía espiritual cristiano. '
+                'Responde ÚNICAMENTE con JSON válido, sin texto adicional.'
+          },
+          {
+            'role': 'user',
+            'content': prompt,
+          },
         ],
         'temperature': 0.85,
         'max_tokens': 1024,
+      
+        // Fuerza una respuesta JSON válida
+        'response_format': {
+          'type': 'json_object',
+        },
       }),
     );
 
