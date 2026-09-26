@@ -4,7 +4,9 @@ import '../../../../core/constants/env.dart';
 
 class GroqService {
   static const _baseUrl = 'https://api.groq.com/openai/v1/chat/completions';
-  static const _model   = 'llama-3.3-70b-versatile';
+
+  // Modelo actual de Groq
+  static const _model = 'openai/gpt-oss-120b';
 
   String get _apiKey => Env.groqApiKey;
 
@@ -32,28 +34,26 @@ Lo que el usuario compartió:
         'Authorization': 'Bearer $_apiKey',
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({
-        'model': _model,
-        'messages': [
-          {
-            'role': 'system',
-            'content':
-                'Eres Reflecta, un guía espiritual cristiano. '
-                'Responde ÚNICAMENTE con JSON válido, sin texto adicional.'
-          },
-          {
-            'role': 'user',
-            'content': prompt,
-          },
-        ],
-        'temperature': 0.85,
-        'max_tokens': 1024,
-      
-        // Fuerza una respuesta JSON válida
-        'response_format': {
-          'type': 'json_object',
-        },
-      }),
+ body: jsonEncode({
+  'model': _model,
+  'messages': [
+    {
+      'role': 'system',
+      'content':
+          'Eres Reflecta, un guía espiritual cristiano. '
+          'Responde ÚNICAMENTE con JSON válido, sin texto adicional.',
+    },
+    {
+      'role': 'user',
+      'content': prompt,
+    },
+  ],
+  'temperature': 0.85,
+  'max_tokens': 1024,
+  'response_format': {
+    'type': 'json_object',
+  },
+}),
     );
 
     if (response.statusCode != 200) {
